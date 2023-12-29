@@ -1,20 +1,42 @@
-const taskEl = document.querySelector(".task");
 const listEL = document.querySelector(".list");
+const input = document.querySelector("input");
 
-function add() {
-  listEL.map((task) => taskHTML(task));
+let todoList = [];
+let todoInputValue = "";
+let counter = 0;
+
+function onInputChange(event) {
+  todoInputValue = event.target.value;
 }
 
-function remove() {
-  taskEl.remove();
+function addTodo() {
+  if (!todoInputValue) {
+    return;
+  }
+  todoList.push({
+    id: counter++,
+    task: todoInputValue,
+  });
+  renderTodos();
+  input.value = "";
+  todoInputValue = "";
 }
 
-function taskHTML(task) {
-  return `
+function deleteTodo(id) {
+  todoList = todoList.filter((todo) => todo.id !== id);
+  renderTodos();
+}
+
+function renderTodos() {
+  listEL.innerHTML = todoList
+    .map(
+      (elem) => `
     <li class="task">
-        ${task}
-        <button onclick="remove()" class="todo__delete">
+        ${elem.task}
+        <button onclick="deleteTodo(${elem.id})" class="todo__delete">
             x
         </button>
-    </li>`;
+    </li>`
+    )
+    .join("");
 }
